@@ -62,4 +62,34 @@ public class LoginTest {
 			System.out.println("Finished! Satisfied!");
 		else System.out.println("Fail");
 	}
+private int codeResponse;
+	private String messageResponse;
+	private String dataResponse;
+	public String creRequest(String... request) {
+		JSONObject req = new JSONObject();
+		req.put("email", request[0]);
+		req.put("password", request[1]);
+		return req.toString();
+	}
+	
+	public void callAPI(String request) {
+		baseURI = BaseURL.BASEURI;
+		Response response = 
+				given()
+					.header("Content-Type", "application/json")
+					.body(request)
+				.when()
+					.post("api/login");
+		
+		JSONObject rep = new JSONObject(response.getBody().asString());
+		this.codeResponse = Integer.parseInt(rep.get("code").toString());
+		this.messageResponse = rep.get("message").toString();
+		this.setDataResponse(rep.get("data").toString());
+	}
+	public String getDataResponse() {
+		return dataResponse;
+	}
+	public void setDataResponse(String dataResponse) {
+		this.dataResponse = dataResponse;
+	}
 }
